@@ -1,7 +1,10 @@
 $(document).ready(function() {
   //created input for first and last name
-  $('body').prepend('<input id="firstname" placeholder="Enter First Name">')
+  $('h1').after('<input id="firstname" placeholder="Enter First Name">')
   $('#firstname').after('<input id="lastname" placeholder="Enter Last Name">')
+
+  // $('<option/>', {val: val, text: data[val]}).append(s);
+  // s.append('body');
 
   //on page load populate featured-joke
   var api = 'http://api.icndb.com/jokes/random';
@@ -10,37 +13,58 @@ $(document).ready(function() {
     })
     .done(function(data) {
       // console.log(data);
-      $('#featured-joke').html(data.value.joke)
+      $('#featured-joke').text(data.value.joke)
     })
 
   //onClick the get jokes button
   $('#btn-getjokes').on('click', function() {
       // console.log('it worked');
-      var api = 'http://api.icndb.com/jokes/random';
-      var firstname = $('#firstname').val();
-      var lastname = $('#lastname').val();
+
+      var newfirstname = $('#firstname').val();
+      var newlastname = $('#lastname').val();
+
+      if (!newfirstname) {
+        newfirstname = 'Chuck'
+      }
+      if (!newlastname) {
+        newlastname = 'Norris'
+      }
+      var numberofjokes = $('#number-of-jokes').val()
+
+      var api = 'http://api.icndb.com/jokes/random/'+ numberofjokes;
+
+
+
+      // console.log('yeah');
 
       $.ajax({
           url: api,
           data: {
-            firstName: firstname,
-            lastName: lastname
-
+            firstName: newfirstname,
+            lastName: newlastname
           }
         })
         .done(function(data) {
-          console.log(data);
-          pushText();
-          $('#featured-joke').text(data.value.joke)
-          emptyFirstName();
+          
+          // console.log(data.value);
+          $('#previous-joke').append($('#featured-joke').html())
+          $('#featured-joke').html('')
+          // emptyFirstName();
+          for (var i=0; i<data.value.length;i++){
+            var joke = data.value[i].joke
+            var li = $('<li></li>')
+            li.text(joke)
+            $('#featured-joke').append(li)
+            // console.log('yeah2');
+          }
         })
 
-      function pushText() {
-        var joke = $('#featured-joke').text()
-        var li = $('<li></li>')
-        li.text(joke)
-        $('#previous-joke').append(li)
-      }
-    }
+      // function pushText() {
+      //   var joke = $('#featured-joke').text()
+      //   var li = $('<li></li>')
+      //   li.text(joke)
+      //   $('#previous-joke').append(li)
+      //   // console.log('yeah2');
+      // }
   })
-});
+})
