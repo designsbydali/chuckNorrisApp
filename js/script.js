@@ -18,53 +18,50 @@ $(document).ready(function() {
 
   //onClick the get jokes button
   $('#btn-getjokes').on('click', function() {
-      // console.log('it worked');
+    // console.log('it worked');
 
-      var newfirstname = $('#firstname').val();
-      var newlastname = $('#lastname').val();
+    var newfirstname = $('#firstname').val();
+    var newlastname = $('#lastname').val();
 
-      if (!newfirstname) {
-        newfirstname = 'Chuck'
-      }
-      if (!newlastname) {
-        newlastname = 'Norris'
-      }
-      var numberofjokes = $('#number-of-jokes').val()
+    if (!newfirstname) {
+      newfirstname = 'Chuck'
+    }
+    if (!newlastname) {
+      newlastname = 'Norris'
+    }
+    var numberofjokes = $('#number-of-jokes').val()
 
-      var api = 'http://api.icndb.com/jokes/random/'+ numberofjokes;
+    var api = 'http://api.icndb.com/jokes/random/' + numberofjokes;
+    // console.log('yeah');
+    $.ajax({
+        url: api,
+        data: {
+          firstName: newfirstname,
+          lastName: newlastname
+        }
+      })
+      .done(function(data) {
 
-
-
-      // console.log('yeah');
-
-      $.ajax({
-          url: api,
-          data: {
-            firstName: newfirstname,
-            lastName: newlastname
-          }
-        })
-        .done(function(data) {
-          
-          // console.log(data.value);
-          $('#previous-joke').append($('#featured-joke').html())
-          $('#featured-joke').html('')
+        // console.log(data.value);
+        oldJokes = $('#featured-joke').html()
+        $('#previous-joke').append(oldJokes)
+        $('#featured-joke').html('')
           // emptyFirstName();
-          for (var i=0; i<data.value.length;i++){
-            var joke = data.value[i].joke
-            var li = $('<li></li>')
-            li.text(joke)
-            $('#featured-joke').append(li)
+        for (var i = 0; i < data.value.length; i++) {
+          var joke = data.value[i].joke
+          var li = $('<li></li>')
+          li.text(joke)
+          $('#featured-joke').append(li)
             // console.log('yeah2');
-          }
-        })
+        }
+      })
 
-      // function pushText() {
-      //   var joke = $('#featured-joke').text()
-      //   var li = $('<li></li>')
-      //   li.text(joke)
-      //   $('#previous-joke').append(li)
-      //   // console.log('yeah2');
-      // }
+    // function pushText() {
+    //   var joke = $('#featured-joke').text()
+    //   var li = $('<li></li>')
+    //   li.text(joke)
+    //   $('#previous-joke').append(li)
+    //   // console.log('yeah2');
+    // }
   })
 })
